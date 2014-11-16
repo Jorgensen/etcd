@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec /opt/etcd/etcd 2>&1
