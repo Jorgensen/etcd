@@ -1,17 +1,15 @@
-FROM dock0/service
+FROM dock0/arch
 MAINTAINER Jon Chen <bsd@voltaire.sh>
 
-ENV ETCD_VERSION v0.4.6
-ENV ETCD_DATA_DIR /srv/etcd/
+ENV ETCD_VERSION v2.0.3
 
-VOLUME ["/srv/etcd"]
-EXPOSE 4001 7001    
+VOLUME ["/opt/build"]
 
 ADD https://github.com/coreos/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz /opt/etcd-$ETCD_VERSION-linux-amd64.tar.gz
 
 RUN pacman -Syu --noconfirm --needed tar
 RUN tar xvf /opt/etcd-$ETCD_VERSION-linux-amd64.tar.gz -C /opt/
-RUN rm -rf /opt/etcd-$ETCD_VERSION-linux-amd64.tar.gz
-RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/ /opt/etcd/
 
-ADD run /service/etcd/run
+RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcd /opt/build/
+RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcd-migrate /opt/build/
+RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcdctl /opt/build/
