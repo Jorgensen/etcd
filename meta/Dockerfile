@@ -1,15 +1,11 @@
-FROM dock0/arch
+FROM docku/build
 MAINTAINER Jon Chen <bsd@voltaire.sh>
 
-ENV ETCD_VERSION v2.0.3
+ENV BINTRAY_USER "jchen"
+ENV BINTRAY_TOKEN ""
+ENV BINTRAY_REPO "docku"
 
-VOLUME ["/opt/build"]
-
-ADD https://github.com/coreos/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz /opt/etcd-$ETCD_VERSION-linux-amd64.tar.gz
-
-RUN pacman -Syu --noconfirm --needed tar
-RUN tar xvf /opt/etcd-$ETCD_VERSION-linux-amd64.tar.gz -C /opt/
-
-RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcd /opt/build/
-RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcd-migrate /opt/build/
-RUN mv /opt/etcd-$ETCD_VERSION-linux-amd64/etcdctl /opt/build/
+RUN mkdir -p /opt/build
+RUN pacman -Syu --needed --noconfirm go
+ADD build_makefile /root/Makefile
+CMD ["make", "-f", "/root/Makefile", "all"]

@@ -1,0 +1,13 @@
+all: get_etcd build upload clean
+
+get_etcd:
+	curl -L https://github.com/coreos/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz -o /opt/etcd.tar.gz
+
+build: /opt/etcd.tar.gz
+	tar -xf /opt/etcd.tar.gz --strip-components 1 -C /opt/build
+
+upload: /opt/build/etcd
+	curl -T /opt/build/etcd -u${BINTRAY_USER}:${BINTRAY_TOKEN} "https://api.bintray.com/content/${BINTRAY_USER}/${BINTRAY_REPO}/etcd/latest/etcd?publish=1"
+
+clean:
+	rm -rf /opt/etcd.tar.gz /opt/build
